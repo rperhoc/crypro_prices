@@ -35,8 +35,9 @@
                 
                 @auth {{--Show this if you are logged in--}}
                 <li>
-                    <span class="font-bold">
-                        Logged in as {{auth()->user()->name}}
+                    <span>
+                        Logged in as 
+                        <b>{{auth()->user()->name}}</b>
                     </span>
                 </li>
 

@@ -60,4 +60,8 @@
       </div>
     </form>
 
+    <div class="text-center">
+      <p>{{ $selected_crypto }} = {{ $exchange_rate }} {{ $selected_fiat }}</p>
+    </div>
+
 </x-layout>

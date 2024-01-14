@@ -17,7 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('users.login')->with('message', 'You are now logged in!');
     }
 
     /**

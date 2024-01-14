@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DataController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CurrencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,12 +17,11 @@ use App\Http\Controllers\ProfileController;
 |
 */
 
-Route::get('/', [DataController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']);
 
-// Show price
-Route::get('/price/{crypto}{fiat}', [DataController::class, 'show']);
+Route::get('/price', [HomeController::class, 'show']);
 
-Route::get('/register', [UserController::class, 'register']);
+Route::get('/update', [CurrencyController::class, 'updateTable']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,6 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Manually added routes:
+    Route::post('/favourite', [UserController::class, 'toggleFavourite']);
 });
 
 require __DIR__.'/auth.php';
