@@ -18,9 +18,7 @@ class Currency extends Model
     {
         try {
             $crypto_data = Data::getCryptoData();
-            #$crypto_data = $data->getCryptoData();
             $fiat_data = Data::getFiatData();
-            #$fiat_data = $data->getFiatData();
 
             // Add all Crypto currencies to table
             foreach ($crypto_data as $currency) {
@@ -52,7 +50,7 @@ class Currency extends Model
     /**
     * Get an array of all currencies.
     */
-    public static function getAllCurrencies() : array
+    public static function allCurrencies() : array
     {
         $data = self::all();
         $currencies = array();
@@ -63,32 +61,24 @@ class Currency extends Model
         return $currencies;
     }
 
-    /**
-    * Get an array of Crypto currencies.
-    */
-    public static function getCryptoCurrencies() : array
+    public static function cryptoCurrencies()
     {
-        $data = self::where('type', 'crypto')->get();
-        $currencies = array();
-        // Store each currency in array with same attributes as in MySQL table
-        foreach ($data as $currency) {
-            array_push($currencies, $currency->attributes);
-        }
-        return $currencies;
+       return self::where('type', 'crypto')->get();
     }
 
-    /**
-    * Get an array of Fiat currencies.
-    */
-    public static function getFiatCurrencies() : array
+    public static function fiatCurrencies() 
     {
-        $data = self::where('type', 'fiat')->get();
-        $currencies = array();
-        // Store each currency in array with same attributes as in MySQL table
-        foreach ($data as $currency) {
-            array_push($currencies, $currency->attributes);
-        }
-        return $currencies;
+        return self::where('type', 'fiat')->get();
+    }
+
+    public function favouritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'users_currencies')->withTimestamps(); 
+    }
+
+    public function isFavouritedBy(int $user_id) : bool
+    {
+        return false;
     }
 
     private function add(array $currency) 

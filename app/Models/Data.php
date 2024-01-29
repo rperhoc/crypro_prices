@@ -14,16 +14,16 @@ class Data extends Model
 
     private const API_BASE = 'https://api.coinbase.com/v2/';
 
-    public function getRateEndpoint(string $crypto, string $fiat, string $price = 'spot'): string
+    public static function getRateEndpoint(string $crypto, string $fiat, string $price = 'spot'): string
     {
         return sprintf(self::API_BASE . 'prices/%s-%s/%s', $crypto, $fiat, $price);
     }
 
-    public function getExchangeRate(string $crypto, string $fiat, string $price = 'spot')
+    public static function getExchangeRate(string $crypto, string $fiat, string $price = 'spot')
     {
-        $endpoint = $this->getRateEndpoint($crypto, $fiat);
+        $endpoint = self::getRateEndpoint($crypto, $fiat);
         try {
-            return $this->getApiData($endpoint)['amount'];
+            return self::getApiData($endpoint)['amount'];
         } catch (\Exception $e) {
             Log::error('Failed to fetch exchange rate: ' . $e->getMessage());
             throw $e;
@@ -50,7 +50,7 @@ class Data extends Model
         }
     }
 
-    private function getApiData($endpoint)
+    private static function getApiData($endpoint)
     {
         $response = Http::get($endpoint);
 

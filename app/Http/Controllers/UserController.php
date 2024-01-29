@@ -15,11 +15,12 @@ class UserController extends Controller
 
     public function toggleFavourite(Request $request) 
     {
-        $user = auth()->user();
         $parameters = $request->request->all();
-       
-        // Logic
+        $user_id = Auth::id();
+        $user = User::find($user_id);
 
+        $user->toggleFavouriteCurrency($parameters['currency_id']);
+        return redirect()->back();
     }
 
 }
