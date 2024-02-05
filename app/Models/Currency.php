@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Services\CoinbaseWrapper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Currency extends Model
@@ -16,78 +18,56 @@ class Currency extends Model
 
     public static function updateTable()
     {
+        $coinbaseWrapper = app()->make(CoinbaseWrapper::class);
         try {
-            $crypto_data = Data::getCryptoData();
-            $fiat_data = Data::getFiatData();
+            $crypto_data = $coinbaseWrapper->cryptoData();
+            $fiat_data = $coinbaseWrapper->fiatData();
 
-            // Add all Crypto currencies to table
             foreach ($crypto_data as $currency) {
-                // Check if currency is listed in the table
-                $exists = self::where('code', $currency['code'])
-                            ->where('type', $currency['type'])
-                            ->exists();
-                // Add currency if it is not listed
-                if (!$exists) {
-                    self::add($currency);
-                }
+                self::firstOrCreate([
+                    'code' => $currency['code'],
+                    'name' => $currency['name'],
+                    'type' => 'crypto'
+                ]);
             }
-            // Add all Fiat currencies to table
+
             foreach ($fiat_data as $currency) {
-                // Check if currency is listed in the table
-                $exists = self::where('code', $currency['id'])
-                            ->where('type', 'fiat')
-                            ->exists();
-                // Add currency if it is not listed
-                if (!$exists) {
-                    self::add($currency);
-                }
+                self::firstOrCreate([
+                    'code' => $currency['id'],
+                    'name' => $currency['name'],
+                    'type' => 'fiat'
+                ]);
             }
+
         } catch(\Exception $e) {
             Log::error('Failed to update currencies table: ' . $e->getMessage());
         }
     }
 
-    /**
-    * Get an array of all currencies.
-    */
-    public static function allCurrencies() : array
+    public function scopeCrypto(Builder $query) : void
     {
-        $data = self::all();
-        $currencies = array();
-        // Store each currency in array with same attributes as in MySQL table
-        foreach ($data as $currency) {
-            array_push($currencies, $currency->attributes);
-        }
-        return $currencies;
+        $query->where('type', 'crypto');
     }
 
-    public static function cryptoCurrencies()
+    public function scopeFiat(Builder $query) : void
     {
-       return self::where('type', 'crypto')->get();
-    }
-
-    public static function fiatCurrencies() 
-    {
-        return self::where('type', 'fiat')->get();
+        $query->where('type', 'fiat');
     }
 
     public function favouritedByUsers()
     {
-        return $this->belongsToMany(User::class, 'users_currencies')->withTimestamps(); 
+        return $this->belongsToMany(User::class, 'users_currencies'); 
     }
 
-    public function isFavouritedBy(int $user_id) : bool
+    public function isFavouritedBy(User $user) : bool
     {
+        $currency_users = $this->favouritedByUsers()->get();
+        foreach ($currency_users as $currency_user) {
+            if ($user->id == $currency_user->id) {
+                return true;
+            }
+        }
         return false;
-    }
-
-    private function add(array $currency) 
-    {
-        self::create([
-            'code' => isset($currency['code']) ? $currency['code'] : $currency['id'],
-            'name' => $currency['name'],
-            'type' => isset($currency['type']) ? $currency['type'] : 'fiat'
-        ]);
     }
 
 }

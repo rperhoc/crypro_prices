@@ -44,19 +44,19 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function toggleFavouriteCurrency(int $currency_id) 
+    public function toggleFavouriteCurrency(Currency $currency) 
     {
-        $this->favouriteCurrencies()->toggle($currency_id);
+        $this->favouriteCurrencies()->toggle($currency->id);
     }
 
     public function favouriteCurrencies() 
     {
-        return $this->belongsToMany(Currency::class, 'users_currencies', 'user_id', 'currency_id')->withTimestamps();
+        return $this->belongsToMany(Currency::class, 'users_currencies', 'user_id', 'currency_id');
     }
 
     public function sortedCryptoCurrencies() 
     {
-        return Currency::cryptoCurrencies()->sortByDesc(function ($currency) 
+        return Currency::crypto()->get()->sortByDesc(function ($currency) 
         {
             return $this->favouriteCurrencies->contains($currency->id);
         });   
@@ -64,7 +64,7 @@ class User extends Authenticatable
 
     public function sortedFiatCurrencies() 
     {
-        return Currency::fiatCurrencies()->sortByDesc(function ($currency) 
+        return Currency::fiat()->get()->sortByDesc(function ($currency) 
         {
             return $this->favouriteCurrencies->contains($currency->id);
         });                        

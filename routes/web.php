@@ -25,8 +25,6 @@ Route::get('/price', [HomeController::class, 'show']);
 
 Route::get('/update', [CurrencyController::class, 'updateTable']);
 
-#Route::get('/test', [Currency::class, 'show']);
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

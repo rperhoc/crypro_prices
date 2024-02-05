@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Currency;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,11 +15,10 @@ class UserController extends Controller
 
     public function toggleFavourite(Request $request) 
     {
-        $parameters = $request->request->all();
-        $user_id = Auth::id();
-        $user = User::find($user_id);
-
-        $user->toggleFavouriteCurrency($parameters['currency_id']);
+        $user = Auth::user();    
+        $currency = Currency::find($request->request->all()['currency_id']);
+        $user->toggleFavouriteCurrency($currency);
+        
         return redirect()->back();
     }
 

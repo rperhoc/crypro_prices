@@ -50,7 +50,9 @@
           <option value={{$currency->id}} 
             @if($currency->id == $selected_crypto->id) selected @endif>
             <b>{{$currency->code}}</b>&nbsp;&nbsp;{{$currency->name}}
-            @if(in_array($currency->id, $favourite_currencies)) * @endif
+            @auth
+              @if(in_array($currency->id, $favourite_currencies)) * @endif
+            @endauth
           </option>
           @endforeach
         </select>
@@ -62,7 +64,9 @@
           <option value={{$currency->id}} 
             @if($currency->id == $selected_crypto->id) selected @endif>
             <b>{{$currency->code}}</b>&nbsp;&nbsp;{{$currency->name}}
-            @if(in_array($currency->id, $favourite_currencies)) * @endif
+            @auth
+              @if(in_array($currency->id, $favourite_currencies)) * @endif
+            @endauth
           </option>
           @endforeach
         </select>
