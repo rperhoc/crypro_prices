@@ -21,6 +21,8 @@ use App\Http\Controllers\CurrencyController;
 
 Route::get('/', [HomeController::class, 'index']);
 
+// Route::get('/test', [CurrencyController::class, 'showFiat']);
+
 Route::get('/price', [HomeController::class, 'show']);
 
 Route::get('/update', [CurrencyController::class, 'updateTable']);

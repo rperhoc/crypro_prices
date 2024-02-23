@@ -62,7 +62,7 @@
         <select name="fiat" id="fiat_dropdown">
           @foreach($fiat_currencies as $currency)
           <option value={{$currency->id}} 
-            @if($currency->id == $selected_crypto->id) selected @endif>
+            @if($currency->id == $selected_fiat->id) selected @endif>
             <b>{{$currency->code}}</b>&nbsp;&nbsp;{{$currency->name}}
             @auth
               @if(in_array($currency->id, $favourite_currencies)) * @endif

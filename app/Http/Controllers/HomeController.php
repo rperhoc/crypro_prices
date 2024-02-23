@@ -13,24 +13,24 @@ class HomeController extends Controller
     {   
         if (auth()->check()) {
             $user = Auth::user();
-            $crypto_currencies = $user->sortedCryptoCurrencies();
-            $fiat_currencies = $user->sortedFiatCurrencies();
+            $cryptoCurrencies = $user->sortedCryptoCurrencies();
+            $fiatCurrencies = $user->sortedFiatCurrencies();
         } else {
-            $crypto_currencies = Currency::crypto()->get();
-            $fiat_currencies = Currency::fiat()->get();
+            $cryptoCurrencies = Currency::crypto()->get();
+            $fiatCurrencies = Currency::fiat()->get();
         }  
         
-        $selected_crypto = $crypto_currencies->first();
-        $selected_fiat = $fiat_currencies->first();
+        $selectedCrypto = $cryptoCurrencies->first();
+        $selectedFiat = $fiatCurrencies->first();
 
         return view('index', [
-            'crypto_currencies' => $crypto_currencies,
-            'fiat_currencies' => $fiat_currencies,
+            'crypto_currencies' => $cryptoCurrencies,
+            'fiat_currencies' => $fiatCurrencies,
             'favourite_currencies' => isset($user) ? $user->favouriteCurrencies->pluck('id')->toArray() : null,
-            'selected_crypto' => $selected_crypto,
-            'selected_fiat' => $selected_fiat,
-            'is_crypto_favourite' => isset($user) ? $user->isCurrencyFavourite($selected_crypto) : null,
-            'is_fiat_favourite' => isset($user) ? $user->isCurrencyFavourite($selected_fiat) : null
+            'selected_crypto' => $selectedCrypto,
+            'selected_fiat' => $selectedFiat,
+            'is_crypto_favourite' => isset($user) ? $user->isCurrencyFavourite($selectedCrypto) : null,
+            'is_fiat_favourite' => isset($user) ? $user->isCurrencyFavourite($selectedFiat) : null
         ]);
     }
     
@@ -43,17 +43,17 @@ class HomeController extends Controller
 
         if (auth()->check()) {
             $user = Auth::user();
-            $crypto_currencies = $user->sortedCryptoCurrencies();
-            $fiat_currencies = $user->sortedFiatCurrencies();
+            $cryptoCurrencies = $user->sortedCryptoCurrencies();
+            $fiatCurrencies = $user->sortedFiatCurrencies();
 
         } else {
-            $crypto_currencies = Currency::crypto()->get();
-            $fiat_currencies = Currency::fiat()->get();
+            $cryptoCurrencies = Currency::crypto()->get();
+            $fiatCurrencies = Currency::fiat()->get();
         }    
         
         return view('index', [
-            'crypto_currencies' => $crypto_currencies,
-            'fiat_currencies' => $fiat_currencies,
+            'crypto_currencies' => $cryptoCurrencies,
+            'fiat_currencies' => $fiatCurrencies,
             'favourite_currencies' => isset($user) ? $user->favouriteCurrencies->pluck('id')->toArray() : null,
             'selected_crypto' => $crypto,
             'selected_fiat' => $fiat,

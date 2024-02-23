@@ -48,6 +48,7 @@ class CoinbaseWrapper
             return $response->json()['data'];
         } else {
             throw new \Exception('API request failed: ' . $response->status());
-        }
+        } 
     }
+
 }

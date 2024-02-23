@@ -20,10 +20,10 @@ class Currency extends Model
     {
         $coinbaseWrapper = app()->make(CoinbaseWrapper::class);
         try {
-            $crypto_data = $coinbaseWrapper->cryptoData();
-            $fiat_data = $coinbaseWrapper->fiatData();
+            $cryptoData = $coinbaseWrapper->cryptoData();
+            $fiatData = $coinbaseWrapper->fiatData();
 
-            foreach ($crypto_data as $currency) {
+            foreach ($cryptoData as $currency) {
                 self::firstOrCreate([
                     'code' => $currency['code'],
                     'name' => $currency['name'],
@@ -31,7 +31,7 @@ class Currency extends Model
                 ]);
             }
 
-            foreach ($fiat_data as $currency) {
+            foreach ($fiatData as $currency) {
                 self::firstOrCreate([
                     'code' => $currency['id'],
                     'name' => $currency['name'],
@@ -61,9 +61,9 @@ class Currency extends Model
 
     public function isFavouritedBy(User $user) : bool
     {
-        $currency_users = $this->favouritedByUsers()->get();
-        foreach ($currency_users as $currency_user) {
-            if ($user->id == $currency_user->id) {
+        $currencyUsers = $this->favouritedByUsers()->get();
+        foreach ($currencyUsers as $currencyUser) {
+            if ($user->id == $currencyUser->id) {
                 return true;
             }
         }
